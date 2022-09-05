@@ -106,6 +106,19 @@ def handle_delete_all_accounts(password):
     save_account_list([],password)
     return []
 
+def handle_reused_passwords(acc_list):
+    p_list=[account['password'] for account in acc_list]
+    usedp_list=[]
+    res=[]
+    for password in p_list:
+        if not (password in usedp_list):
+            usedp_list.append(password)
+            l=[account['website_name'] for account in acc_list if account['password']==password]
+            if len(l)>=2:
+                res.append(l)
+
+    console.print(res)
+
 def show_options():
     table = Table(title="Options")
 
@@ -119,6 +132,7 @@ def show_options():
     table.add_row("4", "Quit the program")
     table.add_row("5", "Show all saved accounts")
     table.add_row("6", "Delete everything")
+    table.add_row("7", "Show reused passwords")
 
     console.print(table, justify="center")
 
@@ -168,6 +182,8 @@ def main():
             print_accounts(account_list)
         elif option == "6":
             account_list=handle_delete_all_accounts(master_password)
+        elif option=="7":
+            handle_reused_passwords(account_list)
         else:
             print("Invalid command...")
             print("Restarting...")
